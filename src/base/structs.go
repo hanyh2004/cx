@@ -10,18 +10,18 @@ const (
 )
 
 type cxType struct {
-	Name string
+	Name *[]byte
 	Affordances []*cxAffordance
 }
 
 type cxField struct {
-	Name string
+	Name *[]byte
 	Typ *cxType
 	Affordances []*cxAffordance
 }
 
 type cxStruct struct {
-	Name string
+	Name *[]byte
 	Fields []*cxField
 	Affordances []*cxAffordance
 }
@@ -30,8 +30,11 @@ type cxStruct struct {
   Context
 */
 
+// Context should also have information about the last added structures. We can manage them as stacks, where makers consume them
 type cxContext struct {
 	Modules []*cxModule
+
+	// Execution information
 	CurrentModule *cxModule
 	CurrentFunction *cxFunction
 	Scopes [][]*cxDefinition
@@ -43,7 +46,7 @@ type cxContext struct {
 */
 
 type cxParameter struct {
-	Name string
+	Name *[]byte
 	Typ *cxType
 	Affordances []*cxAffordance
 }
@@ -61,7 +64,7 @@ type cxExpression struct {
 }
 
 type cxFunction struct {
-	Name string
+	Name *[]byte
 	Inputs []*cxParameter
 	Output *cxParameter
 	Expressions []*cxExpression
@@ -73,18 +76,21 @@ type cxFunction struct {
 */
 
 type cxDefinition struct {
-	Name string
+	Name *[]byte
 	Typ *cxType
 	Value *[]byte
 	Affordances []*cxAffordance
 }
 
 type cxModule struct {
-	Name string
-	Imports map[string]*cxModule
-	Functions map[string]*cxFunction
-	Structs map[string]*cxStruct
-	Definitions map[string]*cxDefinition
+	Name *[]byte
+	Imports []*cxModule
+	Functions []*cxFunction
+	Structs []*cxStruct
+	Definitions []*cxDefinition
+
+	CurrentFunction *cxFunction
+	
 	Affordances []*cxAffordance
 }
 
